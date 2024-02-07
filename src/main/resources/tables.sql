@@ -1,0 +1,9 @@
+
+--DROP DATABASE IF EXISTS skunk;
+--CREATE DATABASE IF NOT EXISTS skunk;
+
+CREATE TABLE IF NOT EXISTS users (
+    id      UUID    PRIMARY KEY,
+    name    VARCHAR        NOT NULL,
+    email   VARCHAR UNIQUE NOT NULL
+);

@@ -10,25 +10,24 @@ import scala.concurrent.ExecutionContext
 /**
   * Created by Bomen Derick.
   */
-class Resources[F[_]] (
+final class Resources[F[_]] (
     val postgres: Resource[F, Session[F]]
 )
 
 object Resources {
   def make[F[_] : ConcurrentEffect : ContextShift](
-      config: AppConfig,
-      ec: ExecutionContext
+      config: AppConfig
   ): Resource[F, Resources[F]] = makePostgres(config).map(p => new Resources[F](p))
 
   private def makePostgres[F[_] : ConcurrentEffect : ContextShift](
     config: AppConfig
     ): Resource[F, Resource[F, Session[F]]] =
     Session.pooled[F](
-      host = config.postgresConfig.host,
-      port = config.postgresConfig.port,
-      user = config.postgresConfig.user,
-      password = Some(config.postgresConfig.password),
-      database = config.postgresConfig.database,
-      max = config.postgresConfig.maxConnections
+      host = config.postgres.host,
+      port = config.postgres.port,
+      user = config.postgres.user,
+      password = Some(config.postgres.password),
+      database = config.postgres.database,
+      max = config.postgres.maxConnections
     )
 }

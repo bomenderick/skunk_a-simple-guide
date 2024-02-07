@@ -49,7 +49,7 @@ object UserRepository {
       update(_update, user)
 
     override def delete(id: User.Id): F[Unit] =
-      update(_delete, id.value)
+      update(_delete, id)
   }
 
   private val codec: Codec[User] =
@@ -84,12 +84,12 @@ object UserRepository {
          SET name = $varchar, email = $varchar
          WHERE id = $uuid
        """.command.contramap { user =>
-      user.id.value ~ user.name.value ~ user.email.value
+      user.name.value ~ user.email.value ~ user.id.value
     }
 
-  private val _delete: Command[UUID] =
+  private val _delete: Command[User.Id] =
     sql"""
          DELETE FROM users
          WHERE id = $uuid
-       """.command.contramap(i => i.id.value)
+       """.command.contramap(i => i.value)
 }

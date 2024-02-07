@@ -18,7 +18,7 @@ object Config {
      maxConnections: Int
   )
 
-  final case class AppConfig(postgresConfig: PostgresConfig)
+  final case class AppConfig(postgres: PostgresConfig)
   object AppConfig {
     def load[F[_] : Sync : ContextShift](blocker: Blocker): F[AppConfig] =
       ConfigSource.default.loadF[F, AppConfig](blocker)

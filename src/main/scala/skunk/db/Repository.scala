@@ -14,7 +14,6 @@ trait Repository[F[_], E] {
     resource.use(command).handleErrorWith {
       case SqlState.UniqueViolation(ex) =>
         UniqueViolation(ex.detail.fold(ex.message)(m => m)).raiseError[F, A]
-//        UniqueViolation(ex.message).raiseError[F, A]
     }
 
   protected def findOneBy[A](command: Query[A, E], argument: A)(implicit F: Sync[F]): F[Option[E]] =
@@ -30,5 +29,4 @@ trait Repository[F[_], E] {
         cmd.execute(argument).void
       }
     }
-
 }
