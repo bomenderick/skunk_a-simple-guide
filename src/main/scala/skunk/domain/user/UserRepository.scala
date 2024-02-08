@@ -26,9 +26,9 @@ object UserRepository {
   def make[F[_] : Sync](
       resource: Resource[F, Session[F]]
   ): F[UserRepository[F]] =
-    Sync[F].delay(new UserAnonymousRepository[F](resource))
+    Sync[F].delay(new UserPrivateRepository[F](resource))
 
-  final private class UserAnonymousRepository[F[_] : Sync](
+  final private class UserPrivateRepository[F[_] : Sync](
     val resource: Resource[F, Session[F]]
   ) extends UserRepository[F] {
     override def findAll: Stream[F, User] =
@@ -91,5 +91,5 @@ object UserRepository {
     sql"""
          DELETE FROM users
          WHERE id = $uuid
-       """.command.contramap(i => i.value)
+       """.command.contramap(_.value)
 }

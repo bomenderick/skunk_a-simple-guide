@@ -5,8 +5,6 @@ import natchez.Trace.Implicits.noop
 import skunk.Session
 import skunk.config.Config.AppConfig
 
-import scala.concurrent.ExecutionContext
-
 /**
   * Created by Bomen Derick.
   */

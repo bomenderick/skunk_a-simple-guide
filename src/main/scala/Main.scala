@@ -21,22 +21,22 @@ object Main extends IOApp {
         config
       ).use { resource =>
         for {
-          user    <- UserRepository.make[IO](resource.postgres)
-          _       <- IO.pure(println("Creating users" + "_"*50))
-          johnId  <- user.create(User.Name("John"), User.Email("email@john.com")).debugIO
-          jacobId <- user.create(User.Name("Jacob"), User.Email("email@jacob.com")).debugIO
-          _       <- user.create(User.Name("Kendrick"), User.Email("email@kendrick.com")).debugIO
-          _       <- IO.pure(println("Fetching all users" + "_"*50))
-          _       <- user.findAll.compile.toList.debugIO
-          _       <- IO.pure(println("Fetching John by Id" + "_"*50))
-          _       <- user.findById(johnId).debugIO
-          _       <- IO.pure(println("Update John's email" + "_"*50))
-          _       <- user.update(User(User.Id(johnId.value), User.Name("John"), User.Email("email@email.com")))
-          _       <- user.findAll.compile.toList.debugIO
-          _       <- IO.pure(println("Delete Jacob" + "_"*50))
-          _       <- user.delete(jacobId)
-          _       <- user.findAll.compile.toList.debugIO
-        } yield ()
+          userRepo <- UserRepository.make[IO](resource.postgres)
+          _        <- IO(println("Creating users" + "_"*50))
+          johnId   <- userRepo.create(User.Name("John"), User.Email("email@john.com")).debugIO
+          jacobId  <- userRepo.create(User.Name("Jacob"), User.Email("email@jacob.com")).debugIO
+          _        <- userRepo.create(User.Name("Kendrick"), User.Email("email@kendrick.com")).debugIO
+          _        <- IO(println("Fetching all users" + "_"*50))
+          _        <- userRepo.findAll.compile.toList.debugIO
+          _        <- IO(println("Fetching John by Id" + "_"*50))
+          _        <- userRepo.findById(johnId).debugIO
+          _        <- IO(println("Update John's email" + "_"*50))
+          _        <- userRepo.update(User(User.Id(johnId.value), User.Name("John"), User.Email("email@email.com")))
+          _        <- userRepo.findAll.compile.toList.debugIO
+          _        <- IO(println("Delete Jacob" + "_"*50))
+          _        <- userRepo.delete(jacobId)
+          _        <- userRepo.findAll.compile.toList.debugIO
+        } yield ExitCode.Success
       }
-    }.as(ExitCode.Success)
+    }
 }

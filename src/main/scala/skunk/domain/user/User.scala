@@ -16,5 +16,5 @@ final case class User (
 object User {
   @newtype case class Id(value: UUID)
   @newtype case class Name(value: String)
-  @newtype  case class Email(value: String)
+  @newtype case class Email(value: String)
 }

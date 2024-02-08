@@ -23,5 +23,4 @@ object Config {
     def load[F[_] : Sync : ContextShift](blocker: Blocker): F[AppConfig] =
       ConfigSource.default.loadF[F, AppConfig](blocker)
   }
-
 }
