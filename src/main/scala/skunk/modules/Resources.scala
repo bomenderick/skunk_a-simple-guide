@@ -13,11 +13,28 @@ final class Resources[F[_]] (
 )
 
 object Resources {
-  def make[F[_] : ConcurrentEffect : ContextShift](
+  def makePooledSession[F[_] : ConcurrentEffect : ContextShift](
       config: AppConfig
-  ): Resource[F, Resources[F]] = makePostgres(config).map(p => new Resources[F](p))
+  ): Resource[F, Resources[F]] = createPostgresPooledSession(config).map(p => new Resources[F](p))
 
-  private def makePostgres[F[_] : ConcurrentEffect : ContextShift](
+  def makeSingleSession[F[_] : ConcurrentEffect : ContextShift](
+     config: AppConfig
+  ): Resources[F] = new Resources[F](createPostgresSingleSession(config))
+
+  // Creating a single database session
+  private def createPostgresSingleSession[F[_] : ConcurrentEffect : ContextShift](
+     config: AppConfig
+  ): Resource[F, Session[F]] =
+    Session.single[F](
+      host = config.postgres.host,
+      port = config.postgres.port,
+      user = config.postgres.user,
+      password = Some(config.postgres.password),
+      database = config.postgres.database
+    )
+
+  // Creating a pooled database session
+  private def createPostgresPooledSession[F[_] : ConcurrentEffect : ContextShift](
     config: AppConfig
     ): Resource[F, Resource[F, Session[F]]] =
     Session.pooled[F](
