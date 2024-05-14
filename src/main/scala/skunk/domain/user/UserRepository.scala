@@ -7,7 +7,6 @@ import fs2.Stream
 import skunk._
 import skunk.codec.all._
 import skunk.implicits._
-import fs2.Stream
 
 import java.util.UUID
 
